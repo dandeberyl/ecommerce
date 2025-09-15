@@ -1,32 +1,40 @@
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 # Create your views here.
 def register(request):
-    """Register a new user and log them in immediately."""
     if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user) 
-            messages.success(request, 'Welcome — your account has been created.')
+            login(request, user)  # Log the user in after registration
             return redirect('profile')
     else:
-        form = UserRegistrationForm()
+        form = UserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})
 
+# Login
+def user_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('profile')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'accounts/login.html', {'form': form})
 
+# Logout
+def user_logout(request):
+    logout(request)
+    return redirect('login')
 
-
+# Profile page
 @login_required
 def profile(request):
-    """Simple profile page showing username and email."""
-    return render(request, 'accounts/profile.html')
-
-@login_required
-def account_view(request):
-    return render(request, 'accounts/account.html')
+    return render(request, 'accounts/profile.html', {'user': request.user})

@@ -5,28 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}E-commerce{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-50 text-gray-900">
 
     <nav class="bg-purple-900 text-white">
         <div class="container mx-auto flex items-center justify-between p-10">
-            <a href="{% url 'home' %}" class="text-3xl font-bold">MyStore</a>
+            <a href="{% url 'home' %}" class="text-3xl font-bold"
+                style="font-family: 'Great Vibes', cursive;">MyStore</a>
 
             <ul class="flex space-x-6">
                 <li><a href="{% url 'home' %}" class="hover:text-yellow-400 text-xl">Home</a></li>
                 <li><a href="{% url 'product_list' %}" class="hover:text-yellow-400 text-xl">Category</a></li>
                 <li><a href="{% url 'view_cart' %}" class="hover:text-yellow-400 text-xl">Cart</a></li>
-                <li><a href="{% url 'account' %}" class="{% if '/account' in request.path %}active{% endif %} text-xl">Profile</a></li>
-
-                {% if user.is_authenticated %}
-                <!-- <li><a href="{% url 'password_change' %}" class="hover:text-yellow-400">Change Password</a></li>  -->
-                <li><a href="{% url 'logout' %}" class="hover:text-yellow-400">Logout</a></li>
-                {% else %}
-                <li><a href="{% url 'login' %}" class="hover:text-yellow-400">Login</a></li> 
-                {% endif %}
-
+                <li> <a href="{% url 'profile' %}" class="hover:underline mx-2 text-xl">Profile</a></li>
             </ul>
         </div>
     </nav>
@@ -36,8 +30,9 @@
         {% endblock %}
     </main>
 
-    <footer class="bg-gray-200 text-center py-4 mt-6">
-        <p class="text-sm">&copy; {{ now|date:"Y" }} MyStore. All rights reserved.</p>
+    <footer class="bg-purple-900 text-center py-4 mt-6">
+        <p class="text-sm text-white" style="font-family: 'Great Vibes', cursive;">&copy; {{ now|date:"Y" }} MyStore.
+            All rights reserved.</p>
     </footer>
 </body>
 
