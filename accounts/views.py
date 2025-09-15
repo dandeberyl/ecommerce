@@ -11,13 +11,12 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Log the user in after registration
+            login(request, user)  
             return redirect('profile')
     else:
         form = UserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})
 
-# Login
 def user_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -29,12 +28,10 @@ def user_login(request):
         form = AuthenticationForm()
     return render(request, 'accounts/login.html', {'form': form})
 
-# Logout
 def user_logout(request):
     logout(request)
     return redirect('login')
 
-# Profile page
 @login_required
 def profile(request):
     return render(request, 'accounts/profile.html', {'user': request.user})
