@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from catalog.models import Product
 from .models import CartItem, Order, OrderItem
 from .forms import CheckoutForm
+from django.http import JsonResponse
 
 #Create your views here
 def _get_session_key(request):
@@ -23,6 +24,11 @@ def add_to_cart(request, product_id):
     if not created:
         cart_item.quantity += 1
         cart_item.save()
+
+    if request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest":
+        cart_items = CartItem.objects.filter(session_key=session_key)
+        total_items = sum(item.quantity for item in cart_items)
+        return JsonResponse({"success": True, "cart_item_count": total_items})
 
     return redirect("view_cart")
 

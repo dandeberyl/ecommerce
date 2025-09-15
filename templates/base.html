@@ -17,10 +17,34 @@
                 style="font-family: 'Great Vibes', cursive;">MyStore</a>
 
             <ul class="flex space-x-6">
-                <li><a href="{% url 'home' %}" class="hover:text-yellow-400 text-xl">Home</a></li>
-                <li><a href="{% url 'product_list' %}" class="hover:text-yellow-400 text-xl">Category</a></li>
-                <li><a href="{% url 'view_cart' %}" class="hover:text-yellow-400 text-xl">Cart</a></li>
-                <li> <a href="{% url 'profile' %}" class="hover:underline mx-2 text-xl">Profile</a></li>
+                <li>
+                    <a href="{% url 'home' %}"
+                        class="text-xl {% if request.resolver_match.url_name == 'home' %}text-yellow-400 font-bold{% else %}hover:text-yellow-400{% endif %}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'product_list' %}"
+                        class="text-xl {% if request.resolver_match.url_name == 'product_list' %}text-yellow-400 font-bold{% else %}hover:text-yellow-400{% endif %}">
+                        Category
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'view_cart' %}"
+                        class="{% if request.resolver_match.url_name == 'view_cart' %}text-yellow-400 font-bold{% else %}hover:text-yellow-400{% endif %}">
+                        Cart (<span id="cart-count">{{ cart_items_count|default:0 }}</span>)
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'profile' %}"
+                        class="text-xl {% if request.resolver_match.url_name == 'profile' %}text-yellow-400 font-bold{% else %}hover:underline{% endif %}">
+                        Profile
+                    </a>
+                </li>
+
             </ul>
         </div>
     </nav>
@@ -34,6 +58,34 @@
         <p class="text-sm text-white" style="font-family: 'Great Vibes', cursive;">&copy; {{ now|date:"Y" }} MyStore.
             All rights reserved.</p>
     </footer>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".add-to-cart-form").forEach(form => {
+                form.addEventListener("submit", function (e) {
+                    e.preventDefault();
+
+                    fetch(form.action, {
+                        method: "POST",
+                        body: new FormData(form)
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                const cartCount = document.querySelector("#cart-count");
+                                if (cartCount) {
+                                    cartCount.textContent = data.cart_item_count;
+                                }
+                                console.log("Added to cart!");
+                            }
+                        })
+                        .catch(err => console.error("Error:", err));
+                });
+            });
+        });
+    </script>
+
 </body>
 
 </html>
