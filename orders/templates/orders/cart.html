@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="p-6 max-w-3xl mx-auto border border-[#f38bf3] rounded-2xl shadow-lg">
+  <div class="bg-gray-100 rounded-2xl">
+    <h2 class="text-xl mb-6">Cart ({{ cart_items.count }})</h2>
+  </div>
+
+  {% if cart_items %}
+  {% for item in cart_items %}
+  <div class="flex items-center mb-4 pb-4 border-b border-gray-300">
+
+    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"
+      class="w-20 h-20 object-cover rounded-lg mr-4">
+
+    <div class="flex-grow">
+      <h4 class="text-lg">{{ item.product.name }}</h4>
+      <p class="text-pink-500 ">KSh {{ item.product.price }}</p>
+
+      <form action="{% url 'update_cart' item.id %}" method="post" class="inline-flex items-center">
+        {% csrf_token %}
+        <button type="submit" name="quantity" value="{{ item.quantity|add:'-1' }}"
+          class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">-</button>
+        <span class="mx-3">{{ item.quantity }}</span>
+        <button type="submit" name="quantity" value="{{ item.quantity|add:'1' }}"
+          class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">+</button>
+      </form>
+
+      <a href="{% url 'remove_from_cart' item.id %}" class="ml-4 text-red-500 hover:underline">Remove</a>
+    </div>
+  </div>
+  {% endfor %}
+
+  <div class="text-right mt-6">
+    <h3 class="text-xl">Total: KSh {{ total }}</h3>
+    <a href="{% url 'checkout' %}"
+      class="inline-block mt-4 px-6 py-2 bg-orange-500 text-white rounded-lg shadow hover:bg-orange-600 transition">
+      Checkout
+    </a>
+  </div>
+  {% else %}
+  <p class="text-gray-500">Your cart is empty.</p>
+  {% endif %}
+</div>
+
+{% endblock %}
