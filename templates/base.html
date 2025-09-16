@@ -33,7 +33,7 @@
 
                 <li>
                     <a href="{% url 'view_cart' %}"
-                        class="{% if request.resolver_match.url_name == 'view_cart' %}text-yellow-400 font-bold{% else %}hover:text-yellow-400{% endif %}">
+                        class="{% if request.resolver_match.url_name == 'view_cart' %}text-yellow-400 font-bold{% else %}hover:text-yellow-400{% endif %} text-xl">
                         Cart (<span id="cart-count">{{ cart_items_count|default:0 }}</span>)
                     </a>
                 </li>
@@ -41,7 +41,7 @@
                 <li>
                     <a href="{% url 'profile' %}"
                         class="text-xl {% if request.resolver_match.url_name == 'profile' %}text-yellow-400 font-bold{% else %}hover:underline{% endif %}">
-                        Profile
+                        {{ user.username }}
                     </a>
                 </li>
 
